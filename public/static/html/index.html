@@ -1,0 +1,116 @@
+<!doctype html><html lang="en" ng-app="app" ng-controller="MainCtrl as Main"><head>
+
+	<meta charset="utf-8">
+	<!-- <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> -->
+	<meta name="author" content="Jimmy Wärting">
+	<meta name="description" content="converts fonts to/from: .dfont .eot .otf .pfb .pfm .suit .svg .ttf .pfa .bin .pt3 .ps .t42 .cff .afm .ttc, .pdf & .woff">
+	<meta name="keywords" content="convert font, fonts, online, free">
+	<meta property="og:title" content="Online font converter">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="http://onlinefontconverter.com/img/favicon/apple-touch-icon-114x114.png">
+	<meta property="og:description" content="converts fonts to/from: .dfont .eot .otf .pfb .pfm .suit .svg .ttf .pfa .bin .pt3 .ps .t42 .cff .afm .ttc, .pdf & .woff">
+	<meta property="og:url" content="http://onlinefontconverter.com.com/">
+
+	<title ng-bind="'OFC: ' + Main.title">OFC</title>
+	<!-- Favicon -->
+	<!-- <link rel="shortcut icon" href="/img/favicon/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="/img/favicon/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="57x57" href="/img/favicon/apple-touch-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="/img/favicon/apple-touch-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="/img/favicon/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="/img/favicon/apple-touch-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="/img/favicon/apple-touch-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="/img/favicon/apple-touch-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="/img/favicon/apple-touch-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="/img/favicon/apple-touch-icon-152x152.png"> -->
+
+	<!-- Style -->
+	<link rel="stylesheet" href="/0.1.5/css/main.css">
+	<link rel="image_src" href="http://onlinefontconverter.com/img/favicon/apple-touch-icon-114x114.png">
+	<link rel="shortcut icon" href="/img/favicon/favicon.ico" type="image/x-icon">
+	
+	<!-- script -->
+	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.js"></script>
+	<script>var _gaq=[];!window.indexedDB&&document.write('<script src="/0.1.5/js/lib/_IndexedDBShim.min.js"><'+"/script>")</script>
+	<script src="/0.1.5/js/app.js"></script>
+
+
+</head><body>
+	<div id="fb-root"></div>
+	<header class="grid">
+		<div class="col-2-3">
+			<a id="logo" href="/">Online font converter</a>
+		</div>
+		<form class="col-1-3" style="text-align: right" action="https://www.paypal.com/cgi-bin/webscr" method="post">
+			<input hidden="" name="cmd" value="_s-xclick">
+			<input hidden="" name="hosted_button_id" value="9735561">
+			<input type="image" src="https://www.paypal.com/en_US/i/btn/btn_donate_LG.gif" style="border:0px none" name="submit" alt="Donate">
+		</form>
+	</header>
+	<nav data-spy="affix" data-offset-top="131">
+		<div class="grid">
+			<section class="col-1-1">
+				<a href="/">Start</a>
+				<a href="/font-formats">Font Formats</a>
+				<a href="/extract-font-from-pdf">Extract font from pdf</a>
+				<a href="/privacy-policy">Privacy policy</a>
+				<!-- <a href="/try-fonts">Try fonts</a> -->
+				<a style="float: right" ng-show="Main.supportCache" ng-href="#" ng-click="Main.enableCache()">{{Main.toggleCacheText}}</a>
+				<a style="float: right; border-left: 1px solid #dedbd1" href="//onlinefontconverter.uservoice.com" target="_self">Send us feedback</a>
+			</section>
+		</div>
+	</nav>
+	<div class="grid">
+		<section class="col-2-3" style="padding-right: 0" ng-controller="RouteCtrl" ng-switch="" on="Main.block">
+			<article ng-include="page"></article>
+			<div id="ads" class="box" ng-switch-default="">
+				<script>google_ad_client="ca-pub-6577613966367319";google_ad_slot="3786167992";google_ad_width=728;google_ad_height=90;</script><script src="http://pagead2.googlesyndication.com/pagead/show_ads.js"></script>
+			</div>
+			<div class="box" ng-switch-when="blocked" ng-include="'/0.1.5/html/block-alt'"></div>
+		</section>
+
+		<div class="col-1-3" style="padding-left: 20px">
+			<aside id="addFont" ng-controller="AddFont">
+				<div class="grid">
+					<div class="col-1-1 box">
+						<div id="browse" class="icon-drop">
+							<h2>Drag & drop</h2>
+							<label>
+								...or select file(s) <input ng-change="onFileSelect();" wis-file="" accept="{{acceptedFiles}}" hidden="" dnd-add="valid" ng-model="$root.files" type="file" multiple="multiple">
+							</label>
+							<label ng-show="suportDir">
+								or a complete folder <input supported="suportDir" wis-file="" ng-change="onFileSelect();" accept="{{acceptedFiles}}" hidden="" dnd-add="valid" ng-model="$root.files" type="file" directory="">
+							</label>
+						</div>
+						<h2 ng-if="false">Select font to convert:</h2>
+						<ul>
+							<li ng-repeat="(id, file) in files"><a ng-href="/font?id={{id}}">{{file.name}}</a><span class="size">{{file.size | filesize}}</span><span class="delete" ng-click="deleteFont(id)" hidden="">x</span></li>
+						</ul>
+					</div>
+				</div>
+			</aside>
+
+		</div>
+	</div>
+
+
+	<div id="fontTest">
+		<i class="eot">-</i>
+		<i class="ttf_otf">-</i>
+		<i class="woff">-</i>
+		<i class="svg">-</i>
+	</div>
+
+
+	<audio id="audio_new" preload="none">
+		<source src="/audio/new.ogg"></source>
+		<source src="/audio/new.mp3"></source>
+		<source src="/audio/new.wav"></source>
+	</audio>
+
+
+	<div ng-change="onFileSelect();" required="" name="d" id="dropzone" accept="{{acceptedFiles}}" wis-file="" multiple="multiple" ng-model="$root.files" dnd-add="valid">{{files}}</div>
+
+	<script>_gaq.push(["_setAccount","UA-8576062-1"]);_gaq.push(["_trackPageview"]);(function(){var e,t=["//google-analytics.com/ga.js","/0.1.5/js/lib/_sessioncam.js"],n=2,r=document.getElementsByTagName("script")[0];while(n--){e=document.createElement("script"),e.type="text/javascript";e.async=true;e.src=t[n];r.parentNode.insertBefore(e,r)}})()</script>
+
+</body></html>
