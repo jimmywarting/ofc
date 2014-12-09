@@ -1,0 +1,55 @@
+#wrapper, html, body {
+	height: 100%;
+}
+
+img {
+	max-width: 100%;
+}
+
+section{
+	margin-bottom: 100px;
+}
+
+.ta-c{
+	text-align: center;
+}
+
+.fl-l{
+	float: left;
+}
+
+a[href^="http://"] {
+    background: url(/images/external.png) center right no-repeat;
+    padding-right: 13px;
+}
+
+[ng-cloak] {
+	display: none !important;
+}
+
+.fadeIn {
+	animation-duration: 1s;
+	animation-delay: .7s;
+}
+
+	.fadeIn.status {
+		animation-duration: 1s;
+		animation-delay: 2s;
+	}
+
+	.fadeIn.status.ng-leave {
+		animation-duration: 0s;
+		animation-delay: 0s;
+	}
+
+#about img{
+	padding: 0 80px 40px 0;
+}
+
+#QnA {
+	position: relative;
+}
+
+md-content {
+	white-space: pre
+}
