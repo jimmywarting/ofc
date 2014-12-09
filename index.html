@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html ng-app="wis">
+<head>
+	<title></title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<meta name="author" content="Jimmy Wärting">
+	<meta name="description" content="converts fonts to/from: .dfont .eot .otf .pfb .pfm .suit .svg .ttf .pfa .bin .pt3 .ps .t42 .cff .afm .ttc, .pdf & .woff">
+	<meta name="keywords" content="convert font, fonts, online, free">
+	<meta property="og:title" content="Online font converter">
+	<meta property="og:type" content="website">
+	<meta property="og:image" content="http://onlinefontconverter.com/img/favicon/apple-touch-icon-114x114.png">
+	<meta property="og:description" content="converts fonts to/from: .dfont .eot .otf .pfb .pfm .suit .svg .ttf .pfa .bin .pt3 .ps .t42 .cff .afm .ttc, .pdf & .woff">
+	<meta property="og:url" content="http://onlinefontconverter.com.com/">
+
+	<script>
+		if(!localStorage.webp){
+			var webp = new Image;
+			webp.onload = webp.onerror = function() {
+				window.webp = webp.width > 0;
+				try{
+					localStorage.webp = window.webp
+				} catch(e){}
+			};
+			webp.src = "data:image/webp;base64,UklGRkoAAABXRUJQVlA4WAoAAAAQAAAAAAAAAAAAQUxQSAwAAAARBxAR/Q9ERP8DAABWUDggGAAAABQBAJ0BKgEAAQAAAP4AAA3AAP7mtQAAAA=="
+		} else {
+			window.webp = localStorage.webp === "true";
+		}
+	</script>
+
+	<!-- Guess if I hate old IE and those who refuse to update -->
+
+	<!--[if lte IE 9]>
+	<meta http-equiv="refresh" content="0;URL=http://browsehappy.com">
+	<script>window.location.replace("http://browsehappy.com")</script>
+	<![endif]-->
+
+	<!-- ActiveXObject is for IE lower then 11 -->
+	<script>!!window.ActiveXObject&&window.location.replace("http://browsehappy.com")</script>
+
+	<!-- Style -->
+	<style>
+		@import url("css/afilepicker.css");
+		@import url("css/animate.css");
+		@import url("css/angular-material.min.css");
+		@import url("css/themes/amber-theme.css");
+		@import url("css/main.css");
+	</style>
+	<link rel="image_src" href="http://onlinefontconverter.com/img/favicon/apple-touch-icon-114x114.png">
+	<link rel="shortcut icon" href="/img/favicon/favicon.ico" type="image/x-icon">
+
+</head>
+<body ng-cloak ng-controller="MainCtrl as Main">
+	<div id="wrapper" layout="column" layout-align="center center">
+		<div ng-if="!Main.fonts.length" layout="row" layout-sm="horizontal" layout-padding>
+
+			<div>
+			</div>
+
+			<div ng-controller="StatusCtrl as Status" ng-switch on="Status.stillChecking" layout-align="center">
+				<!-- <h1><img src="img/logo-ofc.png"></h1> -->
+				<div ng-switch-when="true">
+					<div class="md-primary animated fadeIn status"><md-progress-circular md-mode="indeterminate"></md-progress-circular></div>
+				</div>
+				<div ng-switch-when="false" ng-switch on="Status.res.status">
+					<div ng-switch-when="408" class="ta-c">Doh!<br>The api is not responding - Timeout</div>
+					<div ng-switch-when="503" class="ta-c">Doh!<br>The Service is temporarily unavailable</div>
+					<div ng-switch-when="200">
+						<div layout="row">
+							<div ng-init="firstCollection = $first" ng-repeat="collection in [['font-face','eot','svg','ttf','woff','woff2'],['afm','otf','pfa','pfb','pfm','ps','pt3','tfm'],['bin','cff','dfont','fon','suit','t11','t42','ufo']] track by $index">
+								<md-checkbox aria-label="{{font}}" ng-repeat="font in collection" ng-change="firstCollection && Main.toggle(font, collection); Main.set(font);" ng-false-value="''" ng-true-value="'1'" ng-model="Main.storage[font]">{{font}}</md-checkbox>
+							</div>
+						</div>
+
+						<div layout="row" layout-align="center" style="height:30px">
+							<md-button ng-disabled="1" ng-if="Main.requierFormat">Select format(s) you need</md-button>
+							<md-button ng-if="!Main.requierFormat" a-file-picker="Main.pickerOpt" ng-change="Main.addedFonts()" ng-model="Main.fonts" class="md-primary">Select font(s)</md-button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div ng-if="Main.fonts.length && Main.procentDone !== 100" class="ta-c">
+			<!-- <md-progress-circular class="fl-l" md-mode="determinate" value="{{Main.procentDone}}" style="margin-right:6px"></md-progress-circular>
+			<span>One moment</span> -->
+			<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded < 100">Uploading</span>
+			<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded == 100">Converting</span>
+			<span ng-if="Main.procentDownloaded > 0">Downloading</span>
+			<md-progress-linear style="width: 200px" md-mode="{{(Main.procentDownloaded == 0 && Main.procentUploaded == 100) ? 'indeterminate':'buffer'}}" value="{{Main.procentDownloaded}}" md-buffer-value="{{Main.procentUploaded}}"></md-progress-linear>
+		</div>
+
+		<div ng-if="Main.procentDone === 100">
+			<md-button ng-click="Main.reset()">Convert more</md-button>
+			<md-button class="md-primary" ng-click="Main.save()">Save your font{{Main.fonts.length > 1 ? 's' : ''}}</md-button><br>
+			<p class="ta-c">
+				<small>
+					Thank you for using online font convert.<br>
+					I have removed all ads and all the other<br>
+					extraction to keep it as simple as possible.<br>
+					So this solo rely on donations now instead<br>
+					since many of you use adblock anyway.<br>
+				</small>
+				<a href="https://gratipay.com/jimmy/" target="_blank" title="donate"><img src="https://img.shields.io/gratipay/jimmy.svg" alt="Donate"></a>
+			</p>
+		</div>
+
+	</div>
+
+	<hr>
+
+	<div flex="70" offset="15" id="about">
+		<section class="ta-c">
+			<p>The Online Font Converter is a 100% free service. The Online Font Converter converts fonts to/from: pdf dfont eot otf pfb tfm pfm suit svg ttf pfa bin pt3 ps t42 cff afm ttc woff</p>
+		</section>
+
+		<section layout="column" layout-sm="column" layout-padding>
+
+			<div flex>
+				<img ng-src="img/mashape.{{webp ? 'webp':'gif'}}" class="fl-l">
+				<h3>Online Font Converter API</h3>
+				<p>Online font converter has a simple API that is simple to use without any cost. Only thing you need is an account at mashape and a <a href="https://www.mashape.com/warting/online-font-converter/pricing">subscription plan</a> to get an API key</p>
+				<p>Aenean ullamcorper rutrum felis, sed eleifend turpis placerat ullamcorper. Nunc laoreet dignissim ligula quis laoreet. Nullam bibendum libero et vulputate mollis. Nunc non lacus bibendum, molestie velit auctor, mollis neque. Cras tristique arcu et odio fermentum eleifend. Sed varius leo at nunc semper pellentesque eget non dolor. Nunc sit amet lectus ac nisi eleifend imperdiet. Suspendisse in volutpat lectus, sit amet ornare lorem. Proin placerat ligula eget tortor pellentesque, sed tristique ante interdum.</p>
+				<ul>
+					<li><a href="https://www.mashape.com/warting/online-font-converter">Mashape</a></li>
+					<li><a href="https://www.mashape.com/warting/online-font-converter/pricing">prices</a></li>
+					<li><a href="https://www.mashape.com/warting/online-font-converter">How to</a></li>
+				</ul>
+			</div>
+
+		</section>
+		<section layout="row" layout-sm="column" layout-padding>
+
+			<div flex>
+				<img ng-src="img/github.{{webp ? 'webp':'gif'}}" class="fl-l">
+				<h3>Avalible as open source on github</h3>
+				<p>We value open source and believe it is a privilege to be able to share idea-as-code with people around the world as we work together to build useful tools and products. We believe in building on the shoulders of giants and seek for productive, sustainable ways to continue to strengthen the foundation and create the architecture of the future.</p>
+				<ul>
+					<li><a href="https://github.com/jimmywarting/ofc/fork">Fork</a></li>
+					<li><a href="https://github.com/jimmywarting/ofc/">Make a pull request</a></li>
+					<li><a href="https://github.com/jimmywarting/ofc/issues">Send issue and ideas</a></li>
+				</ul>
+			</div>
+
+		</section>
+
+		<section layout="row" layout-sm="column" layout-padding id="QnA">
+
+			<div flex>
+				<img src="img/owl-question.{{webp ? 'webp':'png'}}" class="fl-l">
+				<h3>Question and answers</h3>
+				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultrices quis nulla eu interdum. Cras ut blandit lacus. Vestibulum in congue orci.</p>
+				<ul ng-controller="QnACtrl as QnA">
+					<li ng-repeat="question in QnA.questions"><a href="#" ng-click="QnA.open($event, question)">{{question.title}}</a></li>
+					<li><a href="http://mashable.com/2011/11/17/free-font-creation-tools/">What tools can i use for creating my own fonts</a></li>
+				</ul>
+			</div>
+
+		</section>
+
+
+	</div>
+
+	<audio id="audio_new" hidden preload="none">
+		<source src="audio/new.ogg"></source>
+		<source src="audio/new.mp3"></source>
+		<source src="audio/new.wav"></source>
+	</audio>
+
+	<script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-animate.min.js"></script>
+	<script src="js/angular-material.js"></script>
+	<script src="js/afilepicker.js"></script>
+	<script>
+		window.app = angular.module( "wis", [ "ngMaterial", "aFilePicker" ] )
+			.run(["$rootScope", "$window", function($rootScope, $window){
+				$rootScope.webp = $window.webp
+			}])
+			.service("storage", ["$window", function($window){
+				var mod = "x";
+				try {
+					localStorage.setItem(mod, mod);
+					localStorage.removeItem(mod);
+					return $window.localStorage;
+				} catch(e) {
+					return {};
+				}
+			}])
+			.controller('StatusCtrl', ['$http', '$timeout', '$mdDialog', function($http, $timeout, $mdDialog){
+				var Status = this;
+				var timedout = false;
+				var timer = $timeout(function(){
+					timedout = true;
+				}, 10000);
+
+				Status.stillChecking = true;
+				$http.get("https://ofc.p.mashape.com/status", {
+					timeout: timer,
+					headers: {
+						"X-Mashape-Key": "dFYPWXxpp3mshKD6Kimb4pVfvYLvp1YWcWfjsnErOY3HN8zs4a"
+					}
+				}).then(function(res){
+					Status.res = res;
+					Status.stillChecking = false;
+				}, function(res){
+					if(timedout) res.status = 408;
+					Status.res = res;
+					Status.stillChecking = false;
+				});
+			}])
+			.controller("MainCtrl", ["$http", "$mdDialog", "storage", "$interval", "$mdToast", "aFilePicker", function($http, $mdDialog, storage, $interval, $mdToast, aFilePicker){
+				var que = [],
+					startTime;
+					Main = this;
+
+				function has(format){
+					return storage[format]
+				}
+
+				Main.save = function(){
+					var paths = {};
+
+					var files = que.map(function(xhr){
+						var cnd = xhr.getResponseHeader("Content-Disposition");
+						var filename = cnd ? cnd.match(/filename="([^"\\]*(?:\\.[^"\\]*)*)"/i)[1] : "Error log - " + xhr.$name + ".json";
+						var type = xhr.getResponseHeader("Content-Type");
+
+						var fileExist = !!paths[filename];
+						var fileType = filename.split('.').pop();
+						var fileNumber = 1;
+
+						while (fileExist) {
+
+							var current = filename.substring(0, filename.lastIndexOf('.')) + ' (' + fileNumber + ').' + fileType;
+
+							if (paths[current]) {
+								fileNumber++;
+							} else {
+								filename = current;
+								break;
+							}
+						}
+
+						paths[filename] = true;
+
+						return {
+							relativePath: filename,
+							type: type,
+							name: filename,
+							$arrayBuffer: xhr.response
+						}
+
+					});
+
+					aFilePicker.save({files: files});
+				}
+
+				this.storage = storage
+
+				this.reset = function(){
+					Main.totalUploadSize =
+					Main.totalDownloadSize =
+					Main.totalDone =
+					Main.totalUploaded =
+					Main.totalDownloaded =
+					Main.procentDone =
+					Main.totalConverting = 0;
+					Main.fonts = [];
+					que = [];
+				}
+
+				this.set = function(format){
+					!this.storage[format] && storage.removeItem(format);
+					this.requierFormat = !this.formats.some(has);
+				}
+
+				this.toggle = function(font, collection){
+					for(var v=storage[collection[0]],con=!0,ii=i=collection.length-1;(i--)>1&&con;con=!!storage[collection[i]]==!!storage[collection[i+1]]);
+
+					if(font === "font-face" && con){
+						for(ii++;ii--;storage[v ? 'setItem' : 'removeItem'](collection[ii], v));
+					} else if (con && !!v && !storage[collection[1]]){
+						storage.removeItem(collection[0]);
+					}
+				}
+
+				this.pickerOpt = {
+					services: ["myDevice", "link"],
+					maxFiles: Infinity,
+					maxFileSize: 26214400
+				};
+
+				this.fonts = [];
+				this.formats = ['afm','bin','cff','dfont','eot','otf','pfa','pfb','pfm','ps','pt3','suit','svg','t42','tfm','ttc','ttf','ufo','woff','woff2','font-face'];
+				this.requierFormat = !this.formats.some(has);
+
+				this.addedFonts = function(){
+					var wantedFormats = this.formats.filter(function(format){
+						return storage.getItem(format) !== null
+					}).join(",");
+
+					this.fonts.forEach(function(font){
+
+						font.getFile.start("Blob", 0, function(blob){
+							UploadFile(blob, font.name, wantedFormats)
+						});
+					});
+
+
+					var updater = $interval(function(){
+						Main.totalUploadSize = 0;
+						Main.totalDownloadSize = 0;
+						Main.totalDone = 0;
+						Main.totalUploaded = 0;
+						Main.totalDownloaded = 0;
+						Main.procentDone = 0;
+						Main.totalConverting = 0;
+
+						Main.procentUploaded = 0;
+						Main.procentDownloaded = 0;
+
+						que.forEach(function(xhr){
+							Main.totalDone += xhr.readyState === 4 ? 1:0;
+
+							if(xhr.$uploaded){
+								Main.totalUploadSize += xhr.$uploaded.total;
+								Main.totalUploaded += xhr.$uploaded.loaded;
+
+								Main.procentDone += xhr.$uploaded.loaded / xhr.$uploaded.total / 2;
+								Main.procentUploaded += xhr.$uploaded.loaded / xhr.$uploaded.total;
+
+								if(xhr.$uploaded.loaded === xhr.$uploaded.total){
+									Main.totalConverting += 1;
+								}
+							}
+
+
+							if(xhr.$downloaded){
+								Main.totalConverting -= 1;
+								Main.totalDownloadSize += xhr.$downloaded.total;
+								Main.totalDownloaded += xhr.$downloaded.loaded;
+
+								Main.procentDone += xhr.$downloaded.loaded / xhr.$downloaded.total / 2;
+								Main.procentDownloaded += xhr.$downloaded.loaded / xhr.$downloaded.total;
+							}
+						});
+
+						Main.procentDone *= 100 / que.length;
+						Main.procentUploaded *= 100 / que.length;
+						Main.procentDownloaded *= 100 / que.length;
+
+						if(Main.procentDone === 100){
+							audio_new.play();
+							$interval.cancel(updater);
+						}
+
+					}, 100);
+
+
+				}
+
+				function UploadFile(blob, name, wantedFormats) {
+					var fd = new FormData();
+					var xhr = new XMLHttpRequest();
+
+					que.push(xhr);
+
+					xhr.$name = name;
+
+					fd.append("file", blob, name);
+					fd.append("format", wantedFormats);
+					fd.append("output", "zip");
+
+					xhr.upload.addEventListener("progress", function(e) {
+						xhr.$uploaded = e;
+					}, false);
+
+					xhr.addEventListener("progress", function(e) {
+						xhr.$downloaded = e;
+					}, false);
+
+					xhr.onload = function(evt){
+						if(xhr.status !== 200){
+							var toast = $mdToast.simple()
+								.content('Failed to convert \n'+name)
+								.action('OK')
+								.highlightAction(false)
+								.hideDelay(0)
+								.position("top right")
+
+							$mdToast.show(toast);
+						}
+					}
+
+					// start upload
+					xhr.open("POST", "https://ofc.p.mashape.com/directConvert");
+					xhr.setRequestHeader("X-Mashape-Key", "dFYPWXxpp3mshKD6Kimb4pVfvYLvp1YWcWfjsnErOY3HN8zs4a");
+					xhr.responseType = "arraybuffer";
+					xhr.send(fd);
+				}
+
+				// var elapsedTime = (new Date().getTime()) - startTime;
+				// var chunksPerTime = currentChunk / elapsedTime;
+				// var estimatedTotalTime = amountOfChunks / chunksPerTime;
+				// var timeLeftInSeconds = (estimatedTotalTime - elapsedTime) / 1000;
+
+				// var withOneDecimalPlace = Math.round(timeLeftInSeconds * 10) / 10;
+			}])
+			.controller('QnACtrl', ['$mdDialog', function($mdDialog){
+				this.questions = [
+					{
+						title: "Why can't I convert my font?",
+						answers: "It may be that the font is in a unknown format (or uses features that isn't supported, or is so badly corrupted as to be unreadable). It can also timeout if it dosen't respond with a single charachter within 30 secounds (mostly caused by large fonts over 500 Kib that is converted to woff2 due to complex algoritm to minimize smallest size)"
+					},{
+						title: "What format can I convert to/from?",
+						answers: "You can convert to: afm bin cff dfont eot fon otf pfa pfb pfm ps pt3 suit svg t11 t42 tfm ttf ufo woff woff2... font-face is included if you have a paid subscription plan. Converting from an other format excludes UFO and font-face. But the glyph included in a PDF can also be converted to a font format"
+					},{
+						title: "Server - What mimetype should I use?",
+						answers:
+						".eot => application/vnd.ms-fontobject (as from December 2005)" +
+						".otf => application/font-sfnt (as from March 2013)" +
+						".svg => image/svg+xml (as from August 2011)" +
+						".ttf => application/font-sfnt (as from March 2013)" +
+						".woff => application/font-woff (as from January 2013)" +
+						"woff2 => application/font-woff2\n\n" +
+
+						"It's worth mentioning that you can gzip (or otherwise compress) all the above font formats except for woff and woff2, which is already compressed."
+					}
+				];
+				this.open = function($event, question){
+					$event.preventDefault();
+
+					var confirm = $mdDialog.alert()
+						.title(question.title)
+						.content(question.answers)
+						.ariaLabel('Answer dialog')
+						.ok('Gotchya!')
+						.targetEvent($event);
+
+					confirm._options.parent = document.getElementById("QnA");
+
+					$mdDialog.show(confirm).then(function(){
+						$event.target.focus();
+					})
+				}
+			}])
+			.filter('filesize', function(){
+				return function (size, cUnit){
+
+					for(var i = 0, unit = 'Byte0KiB0MiB0GiB0TiB0PiB0EiB0ZiB0YiB'.split(0);
+						1024 <= size; // While the size is smaller
+						i++
+					) size /= 1024;
+
+					return size ? (size+.5|0) + (cUnit + "" === cUnit ? cUnit : ' ' + unit[i]) : '--' // jshint ignore:line
+				};
+			});
+	</script>
+</body>
+</html>
+
+
+
