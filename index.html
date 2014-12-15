@@ -111,7 +111,7 @@
 
 	<div flex="70" offset="15" id="about">
 		<section class="ta-c">
-			<p>The Online Font Converter is a 100% free service. The Online Font Converter converts fonts to/from: pdf dfont eot otf pfb tfm pfm suit svg ttf pfa bin pt3 ps t42 cff afm ttc woff</p>
+			<p>The Online Font Converter is a 100% free service. The Online Font Converter converts fonts to/from: pdf dfont eot otf pfb tfm pfm suit svg ttf pfa bin pt3 ps t42 cff afm ttc woff woff2 ufo</p>
 		</section>
 
 		<section layout="column" layout-sm="column" layout-padding>
@@ -120,7 +120,7 @@
 				<img ng-src="img/mashape.{{webp ? 'webp':'gif'}}" class="fl-l">
 				<h3>Online Font Converter API</h3>
 				<p>Online font converter has a simple API that is simple to use without any cost. Only thing you need is an account at mashape and a <a href="https://www.mashape.com/warting/online-font-converter/pricing">subscription plan</a> to get an API key</p>
-				<p>Aenean ullamcorper rutrum felis, sed eleifend turpis placerat ullamcorper. Nunc laoreet dignissim ligula quis laoreet. Nullam bibendum libero et vulputate mollis. Nunc non lacus bibendum, molestie velit auctor, mollis neque. Cras tristique arcu et odio fermentum eleifend. Sed varius leo at nunc semper pellentesque eget non dolor. Nunc sit amet lectus ac nisi eleifend imperdiet. Suspendisse in volutpat lectus, sit amet ornare lorem. Proin placerat ligula eget tortor pellentesque, sed tristique ante interdum.</p>
+				<!-- <p>Aenean ullamcorper rutrum felis, sed eleifend turpis placerat ullamcorper. Nunc laoreet dignissim ligula quis laoreet. Nullam bibendum libero et vulputate mollis. Nunc non lacus bibendum, molestie velit auctor, mollis neque. Cras tristique arcu et odio fermentum eleifend. Sed varius leo at nunc semper pellentesque eget non dolor. Nunc sit amet lectus ac nisi eleifend imperdiet. Suspendisse in volutpat lectus, sit amet ornare lorem. Proin placerat ligula eget tortor pellentesque, sed tristique ante interdum.</p> -->
 				<ul>
 					<li><a href="https://www.mashape.com/warting/online-font-converter">Mashape</a></li>
 					<li><a href="https://www.mashape.com/warting/online-font-converter/pricing">prices</a></li>
@@ -149,7 +149,7 @@
 			<div flex>
 				<img src="img/owl-question.{{webp ? 'webp':'png'}}" class="fl-l">
 				<h3>Question and answers</h3>
-				<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultrices quis nulla eu interdum. Cras ut blandit lacus. Vestibulum in congue orci.</p>
+				<!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ultrices quis nulla eu interdum. Cras ut blandit lacus. Vestibulum in congue orci.</p> -->
 				<ul ng-controller="QnACtrl as QnA">
 					<li ng-repeat="question in QnA.questions"><a href="#" ng-click="QnA.open($event, question)">{{question.title}}</a></li>
 					<li><a href="http://mashable.com/2011/11/17/free-font-creation-tools/">What tools can i use for creating my own fonts</a></li>
