@@ -55,7 +55,7 @@ angular.module("aFilePicker", [])
 
 	// window.Source = Source;
 
-	var hash = {}, curr, len, arr, id=0;
+	var hash = {}, curr, len, arr, id=0, blobClonable = false;
 
 	function nextUID(){
 		return id++;
@@ -149,8 +149,19 @@ angular.module("aFilePicker", [])
 	    	emit = function (msg) {
 	    		msg.version = "v1";
 	    		msg.channel = channel;
-	    		aFileDialog.contentWindow.postMessage(msg, origin);
-	    	}
+	    		
+			if( !blobClonable && msg.detail && msg.detail.readAs === "Blob" ) {
+				msg.detail.readAs = "ArrayBuffer";
+				var orig = hash[msg.detail.onload];
+
+				hash[msg.detail.onload] = function (buffer) {
+					orig( new Blob([buffer]) );
+				}
+			}
+
+			aFileDialog.contentWindow.postMessage(msg, origin);
+			
+		}
 
 	    	emit(message);
 
@@ -179,6 +190,12 @@ angular.module("aFilePicker", [])
 				src: origin + "#/my-device",
 				// allowTransparency: true,
 				onload: function(){
+					try {
+						this.contentWindow.postMessage(new blob([]));
+						 blobClonable = true;
+					} catch (e) {
+						// blobClonable = false;
+					}
 					instace(option);
 				}
 			}, aFilePicker = el("dialog", {
