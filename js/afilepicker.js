@@ -99,7 +99,7 @@ angular.module("aFilePicker", [])
 					});
 				};
 
-				var sources = event.data.detail.map(function(source){
+				var sources = (event.data.detail || []).map(function(source){
 					source.getFile = (new Read(source.id));
 					delete source.id;
 					return source;
