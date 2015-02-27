@@ -55,7 +55,7 @@ angular.module("aFilePicker", [])
 
 	// window.Source = Source;
 
-	var hash = {}, curr, len, arr, id=0;
+	var hash = {}, curr, len, arr, id=0, blobClonable = false;
 
 	function nextUID(){
 		return id++;
@@ -99,7 +99,7 @@ angular.module("aFilePicker", [])
 					});
 				};
 
-				var sources = event.data.detail.map(function(source){
+				var sources = (event.data.detail || []).map(function(source){
 					source.getFile = (new Read(source.id));
 					delete source.id;
 					return source;
@@ -149,8 +149,19 @@ angular.module("aFilePicker", [])
 	    	emit = function (msg) {
 	    		msg.version = "v1";
 	    		msg.channel = channel;
-	    		aFileDialog.contentWindow.postMessage(msg, origin);
-	    	}
+	    		
+			if( !blobClonable && msg.detail && msg.detail.readAs === "Blob" ) {
+				msg.detail.readAs = "ArrayBuffer";
+				var orig = hash[msg.detail.onload];
+
+				hash[msg.detail.onload] = function (buffer) {
+					orig( new Blob([buffer]) );
+				}
+			}
+
+			aFileDialog.contentWindow.postMessage(msg, origin);
+			
+		}
 
 	    	emit(message);
 
@@ -181,7 +192,30 @@ angular.module("aFilePicker", [])
 	function open(option) {
 		defered = $q.defer();
 
+<<<<<<< HEAD
 		instace(option);
+=======
+		if(!aFileDialog){
+			aFileDialog = el("iframe", {
+				id: "aFileDialog",
+				src: origin + "#/my-device",
+				// allowTransparency: true,
+				onload: function(){
+					try {
+						this.contentWindow.postMessage(new blob([]));
+						 blobClonable = true;
+					} catch (e) {
+						// blobClonable = false;
+					}
+					instace(option);
+				}
+			}, aFilePicker = el("dialog", {
+				id: "aFilePicker"
+			}, document.body));
+		} else {
+			instace(option);
+		}
+>>>>>>> branch 'gh-pages' of https://github.com/jimmywarting/ofc
 
 		//(screen.width < 800 || screen.height < 500) && aFileDialog.requestFullscreen();
 
