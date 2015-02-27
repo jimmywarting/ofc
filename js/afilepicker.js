@@ -181,9 +181,20 @@ angular.module("aFilePicker", [])
 		}
 	}
 
+	aFileDialog = el("iframe", {
+		id: "aFileDialog",
+		src: origin + "#/my-device",
+		// allowTransparency: true,
+	}, aFilePicker = el("dialog", {
+		id: "aFilePicker"
+	}, document.body));
+
 	function open(option) {
 		defered = $q.defer();
 
+<<<<<<< HEAD
+		instace(option);
+=======
 		if(!aFileDialog){
 			aFileDialog = el("iframe", {
 				id: "aFileDialog",
@@ -204,8 +215,9 @@ angular.module("aFilePicker", [])
 		} else {
 			instace(option);
 		}
+>>>>>>> branch 'gh-pages' of https://github.com/jimmywarting/ofc
 
-		(screen.width < 800 || screen.height < 500) && aFileDialog.requestFullscreen();
+		//(screen.width < 800 || screen.height < 500) && aFileDialog.requestFullscreen();
 
 		disable_scroll();
 
@@ -217,6 +229,9 @@ angular.module("aFilePicker", [])
 		save: function(option) {
 			option.saveMode = true;
 			open(option);
+		},
+		preload: function() {
+			open
 		}
 	};
 }])
