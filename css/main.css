@@ -18,11 +18,6 @@ section{
 	float: left;
 }
 
-a[href^="http://"] {
-    background: url(/images/external.png) center right no-repeat;
-    padding-right: 13px;
-}
-
 .fadeIn {
 	animation-duration: 1s;
 	animation-delay: .7s;
