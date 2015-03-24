@@ -23,10 +23,6 @@ a[href^="http://"] {
     padding-right: 13px;
 }
 
-[ng-cloak] {
-	display: none !important;
-}
-
 .fadeIn {
 	animation-duration: 1s;
 	animation-delay: .7s;
