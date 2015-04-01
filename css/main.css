@@ -33,14 +33,19 @@ section{
 		animation-delay: 0s;
 	}
 
-#about img{
-	padding: 0 80px 40px 0;
+
+#about{
+	margin: 0 auto;
 }
+
+	#about img{
+		padding: 0 80px 40px 0;
+	}
 
 #QnA {
 	position: relative;
 }
 
 md-content {
-	white-space: pre
+	white-space: pre-line;
 }
