@@ -243,11 +243,11 @@ window.app = angular.module( "wis", [ "ngMaterial", "aFilePicker" ] )
 		},{
 			title: "Server - What mimetype should I use?",
 			answers:
-			".eot => application/vnd.ms-fontobject (as from December 2005)" +
-			".otf => application/font-sfnt (as from March 2013)" +
-			".svg => image/svg+xml (as from August 2011)" +
-			".ttf => application/font-sfnt (as from March 2013)" +
-			".woff => application/font-woff (as from January 2013)" +
+			".eot => application/vnd.ms-fontobject (as from December 2005)\n" +
+			".otf => application/font-sfnt (as from March 2013)\n" +
+			".svg => image/svg+xml (as from August 2011)\n" +
+			".ttf => application/font-sfnt (as from March 2013)\n" +
+			".woff => application/font-woff (as from January 2013)\n" +
 			"woff2 => application/font-woff2\n\n" +
 
 			"It's worth mentioning that you can gzip (or otherwise compress) all the above font formats except for woff and woff2, which is already compressed."

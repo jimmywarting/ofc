@@ -31,128 +31,132 @@
 	<!-- Style -->
 	<link rel="stylesheet" href="css/afilepicker.css">
 	<link rel="stylesheet" href="css/animate.css">
-	<link rel="stylesheet" href="css/angular-material.min.css">
+	<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.8.3/angular-material.min.css">
 	<link rel="stylesheet" href="css/themes/amber-theme.css">
 	<link rel="stylesheet" href="css/main.css">
 	
 	<link rel="image_src" href="http://onlinefontconverter.com/img/favicon/apple-touch-icon-114x114.png">
 	<link rel="shortcut icon" href="/img/favicon/favicon.ico" type="image/x-icon">
 	
-	<script src="https://hammerjs.github.io/dist/hammer.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-aria.min.js"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.5/angular-animate.min.js"></script>
-	<script src="js/angular-material.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-aria.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.8.3/angular-material.min.js"></script>
 	<script src="js/afilepicker.js"></script>
 	<script src="js/main.js"></script>
 
 </head>
 <body ng-controller="MainCtrl as Main">
 	<div id="wrapper" layout="column" layout-align="center center">
-		<div ng-if="!Main.fonts.length" layout="row" layout-sm="horizontal" layout-padding>
+		<div ng-cloak>
 
-			<div>
-			</div>
+			<div ng-if="!Main.fonts.length" layout="row" layout-sm="horizontal" layout-padding>
 
-			<div ng-controller="StatusCtrl as Status" ng-switch on="Status.stillChecking" layout-align="center">
-				<div ng-switch-when="true">
-					<div class="md-primary animated fadeIn status"><md-progress-circular md-mode="indeterminate"></md-progress-circular></div>
-				</div>
-				<div ng-switch-when="false" ng-switch on="Status.res.status">
-					<div ng-switch-when="408" class="ta-c">Doh!<br>The api is not responding - Timeout</div>
-					<div ng-switch-when="503" class="ta-c">Doh!<br>The Service is temporarily unavailable</div>
-					<div ng-switch-when="200">
-						<div layout="row">
-							<div ng-init="firstCollection = $first" ng-repeat="collection in [['font-face','eot','svg','ttf','woff','woff2'],['afm','otf','pfa','pfb','pfm','ps','pt3','tfm'],['bin','cff','dfont','fon','suit','t11','t42','ufo']] track by $index">
-								<md-checkbox aria-label="{{font}}" ng-repeat="font in collection" ng-change="firstCollection && Main.toggle(font, collection); Main.set(font);" ng-false-value="''" ng-true-value="'1'" ng-model="Main.storage[font]">{{font}}</md-checkbox>
+				<div ng-controller="StatusCtrl as Status" ng-switch on="Status.stillChecking" layout-align="center">
+					<div ng-switch-when="true">
+						<div class="md-primary animated fadeIn status"><md-progress-circular md-mode="indeterminate"></md-progress-circular></div>
+					</div>
+					<div ng-switch-when="false" ng-switch on="Status.res.status">
+						<div ng-switch-when="408" class="ta-c">Doh!<br>The api is not responding - Timeout</div>
+						<div ng-switch-when="503" class="ta-c">Doh!<br>The Service is temporarily unavailable</div>
+						<div ng-switch-when="200">
+							<div layout="row">
+								<div ng-init="firstCollection = $first" ng-repeat="collection in [['font-face','eot','svg','ttf','woff','woff2'],['afm','otf','pfa','pfb','pfm','ps','pt3','tfm'],['bin','cff','dfont','fon','suit','t11','t42','ufo']] track by $index">
+									<md-checkbox aria-label="{{font}}" ng-repeat="font in collection" ng-change="firstCollection && Main.toggle(font, collection); Main.set(font);" ng-false-value="''" ng-true-value="'1'" ng-model="Main.storage[font]">{{font}}</md-checkbox>
+								</div>
 							</div>
-						</div>
 
-						<div layout="row" layout-align="center" style="height:30px">
-							<md-button ng-disabled="1" ng-if="Main.requierFormat">Select format(s) you need</md-button>
-							<md-button ng-if="!Main.requierFormat" a-file-picker="Main.pickerOpt" ng-change="Main.addedFonts()" ng-model="Main.fonts" class="md-primary">Select font(s)</md-button>
+							<div layout="row" layout-align="center" style="height:30px">
+								<md-button ng-disabled="1" ng-show="Main.requierFormat">Select format(s) you need</md-button>
+								<md-button ng-show="!Main.requierFormat" a-file-picker="Main.pickerOpt" ng-change="Main.addedFonts()" ng-model="Main.fonts" class="md-primary">Select font(s)</md-button>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<div ng-if="Main.fonts.length && Main.procentDone !== 100" class="ta-c">
-			<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded < 100">Uploading</span>
-			<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded == 100">Converting</span>
-			<span ng-if="Main.procentDownloaded > 0">Downloading</span>
-			<md-progress-linear style="width: 200px" md-mode="{{(Main.procentDownloaded == 0 && Main.procentUploaded == 100) ? 'indeterminate':'buffer'}}" value="{{Main.procentDownloaded}}" md-buffer-value="{{Main.procentUploaded}}"></md-progress-linear>
-		</div>
+			<div ng-if="Main.fonts.length && Main.procentDone !== 100" class="ta-c">
+				<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded < 100">Uploading</span>
+				<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded == 100">Converting</span>
+				<span ng-if="Main.procentDownloaded > 0">Downloading</span>
+				<md-progress-linear style="width: 200px" md-mode="{{(Main.procentDownloaded == 0 && Main.procentUploaded == 100) ? 'indeterminate':'buffer'}}" value="{{Main.procentDownloaded}}" md-buffer-value="{{Main.procentUploaded}}"></md-progress-linear>
+			</div>
 
-		<div ng-if="Main.procentDone === 100">
-			<md-button ng-click="Main.reset()">Convert more</md-button>
-			<md-button class="md-primary" ng-click="Main.save()">Save your font{{Main.fonts.length > 1 ? 's' : ''}}</md-button><br>
-			<p class="ta-c">
-				<small>
-					Thank you for using online font convert.<br>
-					I have removed all ads and all the other<br>
-					extraction to keep it as simple as possible.<br>
-					So this solo rely on donations now instead<br>
-					since many of you use adblock anyway.<br>
-				</small>
-				<a href="https://gratipay.com/jimmy/" target="_blank" title="donate"><img ng-src="https://img.shields.io/gratipay/jimmy.svg" alt="Donate"></a>
-			</p>
-		</div>
+			<div ng-if="Main.procentDone === 100">
+				<md-button ng-click="Main.reset()">Convert more</md-button>
+				<md-button class="md-primary" ng-click="Main.save()">Save your font{{Main.fonts.length > 1 ? 's' : ''}}</md-button><br>
+				<p class="ta-c">
+					<small>
+						Thank you for using online font convert.<br>
+						I have removed all ads and all the other<br>
+						extraction to keep it as simple as possible.<br>
+						So this solo rely on donations now instead<br>
+						since many of you use adblock anyway.<br>
+					</small>
+					<a href="https://gratipay.com/jimmy/" target="_blank" title="donate"><img ng-src="https://img.shields.io/gratipay/jimmy.svg" alt="Donate"></a>
+				</p>
+			</div>
 
-	</div>
+		</div>
+		
+	</div><!-- wrapper -->
 
 	<hr>
+	
+	<div layout="row">
 
-	<div flex="70" offset="15" id="about">
-		<section class="ta-c">
-			<p>The Online Font Converter is a 100% free service. The Online Font Converter converts fonts to/from: pdf dfont eot otf pfb tfm pfm suit svg ttf pfa bin pt3 ps t42 cff afm ttc woff woff2 ufo</p>
-		</section>
+		<div flex="75" id="about">
+			<section class="ta-c">
+				<p>The Online Font Converter is a 100% free service. The Online Font Converter converts fonts to/from: pdf dfont eot otf pfb tfm pfm suit svg ttf pfa bin pt3 ps t42 cff afm ttc woff woff2 ufo</p>
+			</section>
 
-		<section layout="column" layout-sm="column" layout-padding>
+			<section layout="column" layout-sm="column" layout-padding>
 
-			<div flex>
-				<img ng-src="img/mashape.{{webp ? 'webp':'gif'}}" class="fl-l">
-				<h3>Online Font Converter API</h3>
-				<p>Online font converter has a simple API that is simple to use without any cost. Only thing you need is an account at mashape and a <a href="https://www.mashape.com/warting/online-font-converter/pricing">subscription plan</a> to get an API key</p>
-				<ul>
-					<li><a href="https://www.mashape.com/warting/online-font-converter">Mashape</a></li>
-					<li><a href="https://www.mashape.com/warting/online-font-converter/pricing">prices</a></li>
-					<li><a href="https://www.mashape.com/warting/online-font-converter">How to</a></li>
-				</ul>
-			</div>
+				<div flex>
+					<img ng-src="img/mashape.{{webp ? 'webp':'gif'}}" class="fl-l">
+					<h3>Online Font Converter API</h3>
+					<p>Online font converter has a simple API that is simple to use without any cost. Only thing you need is an account at mashape and a <a href="https://www.mashape.com/warting/online-font-converter/pricing">subscription plan</a> to get an API key</p>
+					<ul>
+						<li><a href="https://www.mashape.com/warting/online-font-converter">Mashape</a></li>
+						<li><a href="https://www.mashape.com/warting/online-font-converter/pricing">prices</a></li>
+						<li><a href="https://www.mashape.com/warting/online-font-converter">How to</a></li>
+					</ul>
+				</div>
 
-		</section>
-		<section layout="row" layout-sm="column" layout-padding>
+			</section>
+			<section layout="row" layout-sm="column" layout-padding>
 
-			<div flex>
-				<img rel="github" ng-src="img/github.{{webp ? 'webp':'gif'}}" class="fl-l">
-				<h3>Avalible as open source on github</h3>
-				<p>We value open source and believe it is a privilege to be able to share idea-as-code with people around the world as we work together to build useful tools and products. We believe in building on the shoulders of giants and seek for productive, sustainable ways to continue to strengthen the foundation and create the architecture of the future.</p>
-				<ul>
-					<li><a href="https://github.com/jimmywarting/ofc/fork">Fork</a></li>
-					<li><a href="https://github.com/jimmywarting/ofc/">Make a pull request</a></li>
-					<li><a href="https://github.com/jimmywarting/ofc/issues">Send issue and ideas</a></li>
-				</ul>
-			</div>
+				<div flex>
+					<img rel="github" ng-src="img/github.{{webp ? 'webp':'gif'}}" class="fl-l">
+					<h3>Avalible as open source on github</h3>
+					<p>We value open source and believe it is a privilege to be able to share idea-as-code with people around the world as we work together to build useful tools and products. We believe in building on the shoulders of giants and seek for productive, sustainable ways to continue to strengthen the foundation and create the architecture of the future.</p>
+					<ul>
+						<li><a href="https://github.com/jimmywarting/ofc/fork">Fork</a></li>
+						<li><a href="https://github.com/jimmywarting/ofc/">Make a pull request</a></li>
+						<li><a href="https://github.com/jimmywarting/ofc/issues">Send issue and ideas</a></li>
+					</ul>
+				</div>
 
-		</section>
+			</section>
 
-		<section layout="row" layout-sm="column" layout-padding id="QnA">
+			<section layout="row" layout-sm="column" layout-padding id="QnA">
 
-			<div flex>
-				<img rel="owl" ng-src="img/owl-question.{{webp ? 'webp':'png'}}" class="fl-l">
-				<h3>Question and answers</h3>
-				<ul ng-controller="QnACtrl as QnA">
-					<li ng-repeat="question in QnA.questions"><a href="#" ng-click="QnA.open($event, question)">{{question.title}}</a></li>
-					<li><a href="http://mashable.com/2011/11/17/free-font-creation-tools/">What tools can i use for creating my own fonts</a></li>
-				</ul>
-			</div>
+				<div flex>
+					<img rel="owl" ng-src="img/owl-question.{{webp ? 'webp':'png'}}" class="fl-l">
+					<h3>Question and answers</h3>
+					<ul ng-controller="QnACtrl as QnA">
+						<li ng-repeat="question in QnA.questions"><a href="#" ng-click="QnA.open($event, question)">{{question.title}}</a></li>
+						<li><a href="http://mashable.com/2011/11/17/free-font-creation-tools/">What tools can i use for creating my own fonts</a></li>
+					</ul>
+				</div>
 
-		</section>
+			</section>
 
 
-	</div>
-
+		</div><!-- flex -->
+	
+	</div><!-- row -->
+	
 	<audio id="audio_new" hidden preload="none">
 		<source src="audio/new.ogg"></source>
 		<source src="audio/new.mp3"></source>
