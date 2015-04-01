@@ -48,57 +48,58 @@
 </head>
 <body ng-controller="MainCtrl as Main">
 	<div id="wrapper" layout="column" layout-align="center center">
-		<div ng-if="!Main.fonts.length" layout="row" layout-sm="horizontal" layout-padding>
+		<div ng-cloak>
 
-			<div>
-			</div>
+			<div ng-if="!Main.fonts.length" layout="row" layout-sm="horizontal" layout-padding>
 
-			<div ng-controller="StatusCtrl as Status" ng-switch on="Status.stillChecking" layout-align="center">
-				<div ng-switch-when="true">
-					<div class="md-primary animated fadeIn status"><md-progress-circular md-mode="indeterminate"></md-progress-circular></div>
-				</div>
-				<div ng-switch-when="false" ng-switch on="Status.res.status">
-					<div ng-switch-when="408" class="ta-c">Doh!<br>The api is not responding - Timeout</div>
-					<div ng-switch-when="503" class="ta-c">Doh!<br>The Service is temporarily unavailable</div>
-					<div ng-switch-when="200">
-						<div layout="row">
-							<div ng-init="firstCollection = $first" ng-repeat="collection in [['font-face','eot','svg','ttf','woff','woff2'],['afm','otf','pfa','pfb','pfm','ps','pt3','tfm'],['bin','cff','dfont','fon','suit','t11','t42','ufo']] track by $index">
-								<md-checkbox aria-label="{{font}}" ng-repeat="font in collection" ng-change="firstCollection && Main.toggle(font, collection); Main.set(font);" ng-false-value="''" ng-true-value="'1'" ng-model="Main.storage[font]">{{font}}</md-checkbox>
+				<div ng-controller="StatusCtrl as Status" ng-switch on="Status.stillChecking" layout-align="center">
+					<div ng-switch-when="true">
+						<div class="md-primary animated fadeIn status"><md-progress-circular md-mode="indeterminate"></md-progress-circular></div>
+					</div>
+					<div ng-switch-when="false" ng-switch on="Status.res.status">
+						<div ng-switch-when="408" class="ta-c">Doh!<br>The api is not responding - Timeout</div>
+						<div ng-switch-when="503" class="ta-c">Doh!<br>The Service is temporarily unavailable</div>
+						<div ng-switch-when="200">
+							<div layout="row">
+								<div ng-init="firstCollection = $first" ng-repeat="collection in [['font-face','eot','svg','ttf','woff','woff2'],['afm','otf','pfa','pfb','pfm','ps','pt3','tfm'],['bin','cff','dfont','fon','suit','t11','t42','ufo']] track by $index">
+									<md-checkbox aria-label="{{font}}" ng-repeat="font in collection" ng-change="firstCollection && Main.toggle(font, collection); Main.set(font);" ng-false-value="''" ng-true-value="'1'" ng-model="Main.storage[font]">{{font}}</md-checkbox>
+								</div>
 							</div>
-						</div>
 
-						<div layout="row" layout-align="center" style="height:30px">
-							<md-button ng-disabled="1" ng-show="Main.requierFormat">Select format(s) you need</md-button>
-							<md-button ng-show="!Main.requierFormat" a-file-picker="Main.pickerOpt" ng-change="Main.addedFonts()" ng-model="Main.fonts" class="md-primary">Select font(s)</md-button>
+							<div layout="row" layout-align="center" style="height:30px">
+								<md-button ng-disabled="1" ng-show="Main.requierFormat">Select format(s) you need</md-button>
+								<md-button ng-show="!Main.requierFormat" a-file-picker="Main.pickerOpt" ng-change="Main.addedFonts()" ng-model="Main.fonts" class="md-primary">Select font(s)</md-button>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
 
-		<div ng-if="Main.fonts.length && Main.procentDone !== 100" class="ta-c">
-			<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded < 100">Uploading</span>
-			<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded == 100">Converting</span>
-			<span ng-if="Main.procentDownloaded > 0">Downloading</span>
-			<md-progress-linear style="width: 200px" md-mode="{{(Main.procentDownloaded == 0 && Main.procentUploaded == 100) ? 'indeterminate':'buffer'}}" value="{{Main.procentDownloaded}}" md-buffer-value="{{Main.procentUploaded}}"></md-progress-linear>
-		</div>
+			<div ng-if="Main.fonts.length && Main.procentDone !== 100" class="ta-c">
+				<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded < 100">Uploading</span>
+				<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded == 100">Converting</span>
+				<span ng-if="Main.procentDownloaded > 0">Downloading</span>
+				<md-progress-linear style="width: 200px" md-mode="{{(Main.procentDownloaded == 0 && Main.procentUploaded == 100) ? 'indeterminate':'buffer'}}" value="{{Main.procentDownloaded}}" md-buffer-value="{{Main.procentUploaded}}"></md-progress-linear>
+			</div>
 
-		<div ng-if="Main.procentDone === 100">
-			<md-button ng-click="Main.reset()">Convert more</md-button>
-			<md-button class="md-primary" ng-click="Main.save()">Save your font{{Main.fonts.length > 1 ? 's' : ''}}</md-button><br>
-			<p class="ta-c">
-				<small>
-					Thank you for using online font convert.<br>
-					I have removed all ads and all the other<br>
-					extraction to keep it as simple as possible.<br>
-					So this solo rely on donations now instead<br>
-					since many of you use adblock anyway.<br>
-				</small>
-				<a href="https://gratipay.com/jimmy/" target="_blank" title="donate"><img ng-src="https://img.shields.io/gratipay/jimmy.svg" alt="Donate"></a>
-			</p>
-		</div>
+			<div ng-if="Main.procentDone === 100">
+				<md-button ng-click="Main.reset()">Convert more</md-button>
+				<md-button class="md-primary" ng-click="Main.save()">Save your font{{Main.fonts.length > 1 ? 's' : ''}}</md-button><br>
+				<p class="ta-c">
+					<small>
+						Thank you for using online font convert.<br>
+						I have removed all ads and all the other<br>
+						extraction to keep it as simple as possible.<br>
+						So this solo rely on donations now instead<br>
+						since many of you use adblock anyway.<br>
+					</small>
+					<a href="https://gratipay.com/jimmy/" target="_blank" title="donate"><img ng-src="https://img.shields.io/gratipay/jimmy.svg" alt="Donate"></a>
+				</p>
+			</div>
 
-	</div>
+		</div>
+		
+	</div><!-- wrapper -->
 
 	<hr>
 	
