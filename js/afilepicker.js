@@ -205,7 +205,7 @@ angular.module("aFilePicker", [])
 		iframeLoaded.promise.then(function(){
 			instace(option);
 
-			(screen.width < 800 || screen.height < 500) && aFileDialog.requestFullscreen();
+			// (screen.width < 800 || screen.height < 500) && aFileDialog.requestFullscreen();
 
 			disable_scroll();
 		});
