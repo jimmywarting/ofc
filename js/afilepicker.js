@@ -180,36 +180,38 @@ angular.module("aFilePicker", [])
 			aFilePicker.setAttribute('open', '');
 		}
 	}
+	var iframeLoaded = $q.defer();
+
+	aFileDialog = el("iframe", {
+		id: "aFileDialog",
+		src: origin + "#/my-device",
+		// allowTransparency: true,
+		onload: function(){
+			try {
+				this.contentWindow.postMessage(new blob([]));
+				blobClonable = true;
+			} catch (e) {
+				// blobClonable = false;
+			}
+			iframeLoaded.resolve();			
+		}
+	}, aFilePicker = el("dialog", {
+		id: "aFilePicker"
+	}, document.body));
 
 	function open(option) {
 		defered = $q.defer();
 
-		if(!aFileDialog){
-			aFileDialog = el("iframe", {
-				id: "aFileDialog",
-				src: origin + "#/my-device",
-				// allowTransparency: true,
-				onload: function(){
-					try {
-						this.contentWindow.postMessage(new blob([]));
-						 blobClonable = true;
-					} catch (e) {
-						// blobClonable = false;
-					}
-					instace(option);
-				}
-			}, aFilePicker = el("dialog", {
-				id: "aFilePicker"
-			}, document.body));
-		} else {
+		iframeLoaded.promise.then(function(){
 			instace(option);
-		}
 
-		(screen.width < 800 || screen.height < 500) && aFileDialog.requestFullscreen();
+			(screen.width < 800 || screen.height < 500) && aFileDialog.requestFullscreen();
 
-		disable_scroll();
+			disable_scroll();
+		});
 
 		return defered.promise;
+
 	}
 
 	return {
