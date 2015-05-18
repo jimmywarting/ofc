@@ -2,21 +2,9 @@
 
 var isPushEnabled = false;
 
+/*
 // Once the service worker is registered set the initial state  
-function initialiseState() {  
-  // Are Notifications supported in the service worker?  
-  if (!('showNotification' in ServiceWorkerRegistration.prototype)) {  
-    console.warn('Notifications aren\'t supported.');  
-    return;  
-  }
-
-  // Check the current Notification permission.  
-  // If its denied, it's a permanent block until the  
-  // user changes the permission  
-  if (Notification.permission === 'denied') {  
-    console.warn('The user has blocked notifications.');  
-    return;  
-  }
+function initialiseState() {
 
   // Check if push messaging is supported  
   if (!('PushManager' in window)) {  
@@ -53,6 +41,57 @@ function initialiseState() {
       });  
   });  
 }
+*/
+
+function subscribe() {
+  // Let's check if the browser supports notifications
+  if (!("Notification" in window)) {
+    alert("This browser does not support desktop notification");
+    return;
+  }
+  
+  if (!('showNotification' in ServiceWorkerRegistration.prototype)) {  
+    alert("This browser does not support desktop notification from service worker"); 
+    return;  
+  }
+  
+  // Check that service workers are supported, if so, progressively  
+  // enhance and add push messaging support, otherwise continue without it.  
+  if (!'serviceWorker' in navigator) {
+    alert("This browser does not support service Worker");
+    return;
+  }
+
+  // Let's check if the user is okay to get some notification
+  if (Notification.permission === "granted") {
+    // If it's okay let's create a cron job
+    navigator.serviceWorker.register('service-worker.js');
+    alert("service worker registerd!");
+  }
+
+  // Otherwise, we need to ask the user for permission
+  // Note, Chrome does not implement the permission static property
+  // So we have to check for NOT 'denied' instead of 'default'
+  else if (Notification.permission !== 'denied') {
+    Notification.requestPermission(function (permission) {
+
+      // Whatever the user answers, we make sure we store the information
+      if(!('permission' in Notification)) {
+        Notification.permission = permission;
+      }
+
+      // If it's okay let's create a cron job
+      if (permission === "granted") {
+        navigator.serviceWorker.register('service-worker.js');
+        alert("service worker registerd!");
+      }
+    });
+  }
+
+  // At last, if the user already denied any notification, and you 
+  // want to be respectful there is no need to bother him any more.
+}
+
 
 window.addEventListener('load', function() {  
   var pushButton = document.querySelector('.js-push-button');  
@@ -63,13 +102,4 @@ window.addEventListener('load', function() {
       subscribe();  
     }  
   });
-
-  // Check that service workers are supported, if so, progressively  
-  // enhance and add push messaging support, otherwise continue without it.  
-  if ('serviceWorker' in navigator) {  
-    navigator.serviceWorker.register('service-worker.js')  
-    .then(function(){});  
-  } else {  
-    console.warn('Service workers aren\'t supported in this browser.');  
-  }  
 });
