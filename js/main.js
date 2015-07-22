@@ -73,7 +73,12 @@ window.app = angular.module( "wis", [ "ngMaterial", "aFilePicker" ] )
 				relativePath: filename,
 				type: type,
 				name: filename,
-				$arrayBuffer: xhr.response
+				$arrayBuffer: cnd ? xhr.response : (function(){return new Uint16Array([
+					85, 110, 97, 98, 108, 101,
+					32, 116, 111, 32, 114, 101,
+					97, 100, 32, 116, 104, 101,
+					32, 114, 101, 115, 112, 111,
+					110, 115, 101]).buffer})()
 			}
 
 		});
@@ -166,8 +171,14 @@ window.app = angular.module( "wis", [ "ngMaterial", "aFilePicker" ] )
 					Main.totalDownloadSize += xhr.$downloaded.total;
 					Main.totalDownloaded += xhr.$downloaded.loaded;
 
-					Main.procentDone += xhr.$downloaded.loaded / xhr.$downloaded.total / 2;
-					Main.procentDownloaded += xhr.$downloaded.loaded / xhr.$downloaded.total;
+					if(xhr.$downloaded.lengthComputable){
+						Main.procentDone += xhr.$downloaded.loaded / xhr.$downloaded.total / 2;
+						Main.procentDownloaded += xhr.$downloaded.loaded / xhr.$downloaded.total;
+					} else {
+						Main.procentDone += xhr.readyState === 4 ? 0.5 : 0;
+						Main.procentDownloaded += xhr.readyState === 4 ? 1 : 0;
+					}
+
 				}
 			});
 
@@ -205,10 +216,16 @@ window.app = angular.module( "wis", [ "ngMaterial", "aFilePicker" ] )
 			xhr.$downloaded = e;
 		}, false);
 
-		xhr.onload = function(evt){
+		console.log(xhr);
+
+		xhr.onerror = xhr.onload = function(evt){
+			var msg = {
+				0: "Failed to convert \""+name+"\" - Could possible be unable to communicate with Mashape API",
+				def: 'Failed to convert \n'+name
+			}
 			if(xhr.status !== 200){
 				var toast = $mdToast.simple()
-					.content('Failed to convert \n'+name)
+					.content(msg[xhr.status] || msg.def)
 					.action('OK')
 					.highlightAction(false)
 					.hideDelay(0)
