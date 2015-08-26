@@ -46,4 +46,4 @@ setInterval(function(){
       var icon = 'https://dummyimage.com/128x128/000/fff';
       showNotification(title, message, icon, {});
 	  });
-}, 10000);
+}, 60000*10);
