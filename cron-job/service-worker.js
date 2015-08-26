@@ -18,7 +18,7 @@ var reqConfig = (function(){var a=new FormData;a.append("format","svg");a.append
 e.push(c)}return new Blob(e)}());return{method:"POST",headers:{"X-Mashape-Key":"dFYPWXxpp3mshKD6Kimb4pVfvYLvp1YWcWfjsnErOY3HN8zs4a"},body:a}})();
 
 function checkStatus(response) {
-	if (response.status === 200 && headers.get("content-type") === 'application/octet-stream') {
+	if (response.status === 200 && response.headers.get("content-type") === 'application/octet-stream') {
 		return response
 	} else {
 		var error = new Error(response.statusText)
