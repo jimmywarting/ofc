@@ -1,16 +1,35 @@
-<!DOCTYPE html>
-<html>
+<html lang="en" ng-app="StarterApp">
+	<head>
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.css">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+		<meta name="viewport" content="initial-scale=1" />
+	</head>
+	<body layout="column" ng-controller="AppCtrl as App">
 
-  <head>
-    <script src="script.js"></script>
-  </head>
+		<div layout="column" layout-fill>
+			<md-toolbar class="md-tall">
+				<span flex></span>
+				<h1>Push Demo</h1>
+			</md-toolbar>
+			<md-content>
+				<md-switch class="md-primary" ng-change="App.pushChanged()" ng-model="App.pushEnabeld">
+					Enable Push Notifications
+				</md-switch>
+				
+				<md-button class="md-primary">Convert a font now</md-button>
 
-  <body>
-    <h1>Hello Plunker!</h1>
-    
-    <button onclick="subscribe()"> 
-      Enable Push Messages  
-    </button>
-  </body>
+			</md-content>
+		</div>
 
+
+
+		<!-- Angular Material Dependencies -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.9.4/angular-material.min.js"></script>
+		<script src="script.js"></script>
+		
+	</body>
 </html>
