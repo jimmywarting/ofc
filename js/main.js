@@ -236,7 +236,7 @@ window.app = angular.module( "wis", [ "ngMaterial", "aFilePicker" ] )
 		}
 
 		// start upload
-		xhr.open("POST", "https://ofc-distribute.herokuapp.com/directConvert");
+		xhr.open("POST", "https://ofc.p.mashape.com/directConvert/directConvert");
 		xhr.setRequestHeader("X-Mashape-Key", "YT9CrbRFurmsh1wK0vMxAT3OAaipp1Ghp3MjsnPIAPRuXDeIae");
 		xhr.responseType = "arraybuffer";
 		xhr.send(fd);
