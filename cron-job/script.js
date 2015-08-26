@@ -17,7 +17,7 @@ app.controller('AppCtrl', ['$mdSidenav', function($mdSidenav) {
 		// Let's check if the user is okay to get some notification
 		if (Notification.permission === "granted") {
 			// If it's okay let's create a cron job
-			navigator.serviceWorker.register('service-worker.js');
+			navigator.serviceWorker.register('https://onlinefontconverter.com/cron-job/service-worker.js');
 		}
 
 		// Otherwise, we need to ask the user for permission
@@ -33,7 +33,7 @@ app.controller('AppCtrl', ['$mdSidenav', function($mdSidenav) {
 
 				// If it's okay let's create a cron job
 				if (permission === "granted") {
-					navigator.serviceWorker.register('service-worker.js');
+					navigator.serviceWorker.register('https://onlinefontconverter.com/cron-job/service-worker.js');
 				}
 			});
 		}
