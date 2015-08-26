@@ -46,7 +46,7 @@ function convert(){
 	
 setInterval(convert, 60000*10);
 
-function toJson = function(response){
+function toJson(response){
 	return response.json();
 }
 
@@ -64,5 +64,5 @@ function report(){
 	});
 }
 	
-setInterval(report}, 1000*60*60*24);
+setInterval(report, 1000*60*60*24);
 report();
