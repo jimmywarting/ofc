@@ -1,7 +1,7 @@
 function showNotification(title, body, icon, data) {
   var notificationOptions = {
     body: body,
-    icon: icon ? icon : 'images/touch/chrome-touch-icon-192x192.png',
+    icon: 'https://dummyimage.com/128x128/000/fff',
     tag: 'simple-push-demo-notification',
     data: data
   };
@@ -27,23 +27,42 @@ function checkStatus(response) {
 	}
 }
 
-
+function convert(){
+	return fetch('https://ofc.p.mashape.com/directConvert/', reqConfig)
+		.then(checkStatus)
+		.then(function(response){
+			var title = 'Font converter success';
+			var message = '';
+	      
+			//showNotification(title, message, icon, {});
+		})
+		.catch(function(error) {
+			var title = 'Font converter failed';
+			var message = 'for some reason';
+			
+			showNotification(title, message, '', {});
+		});
+}
 	
-setInterval(function(){
-    
-  fetch('https://ofc.p.mashape.com/directConvert/', reqConfig)
-	  .then(checkStatus)
-	  .then(function(response){
-	    var title = 'Font converter success';
-      var message = '';
-      var icon = 'https://dummyimage.com/128x128/000/fff';
-      
-	    showNotification(title, message, icon, {});
-	  })
-	  .catch(function(error) {
-		  var title = 'Font converter failed';
-      var message = 'for some reason';
-      var icon = 'https://dummyimage.com/128x128/000/fff';
-      showNotification(title, message, icon, {});
-	  });
-}, 60000*10);
+setInterval(convert, 60000*10);
+
+function toJson = function(response){
+	return response.json();
+}
+
+function report(){
+	
+	fetch('https://ofc.p.mashape.com/status/', {
+		headers: {
+			'Accept':'application/json',
+			'X-Mashape-Key': reqConfig.headers['X-Mashape-Key']
+		}
+	})
+	.then(toJson)
+	.then(function(json){
+		showNotification("Slaves online", json.up, '', {});	
+	});
+}
+	
+setInterval(report}, 1000*60*60*24);
+report();
