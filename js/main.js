@@ -182,7 +182,7 @@ window.app = angular.module( "wis", [ "ngMaterial", "aFilePicker" ] )
 				}
 			});
 
-			Main.procentDone *= 100 / que.length;
+			Main.procentDone *= Math.round(100 / que.length);
 			Main.procentUploaded *= 100 / que.length;
 			Main.procentDownloaded *= 100 / que.length;
 
