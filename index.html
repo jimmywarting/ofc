@@ -75,7 +75,7 @@
 				</div>
 			</div>
 
-			<div ng-if="Main.fonts.length && Main.totalDone === Main.fonts.length" class="ta-c">
+			<div ng-if="Main.fonts.length && Main.totalDone !== Main.fonts.length" class="ta-c">
 				<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded < 100">Uploading</span>
 				<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded == 100">Converting</span>
 				<span ng-if="Main.procentDownloaded > 0">Downloading</span>
