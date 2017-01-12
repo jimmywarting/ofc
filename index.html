@@ -75,14 +75,14 @@
 				</div>
 			</div>
 
-			<div ng-if="Main.fonts.length && Main.procentDone !== 100" class="ta-c">
+			<div ng-if="Main.fonts.length && Main.totalDone === Main.fonts.length" class="ta-c">
 				<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded < 100">Uploading</span>
 				<span ng-if="Main.procentDownloaded == 0 && Main.procentUploaded == 100">Converting</span>
 				<span ng-if="Main.procentDownloaded > 0">Downloading</span>
 				<md-progress-linear style="width: 200px" md-mode="{{(Main.procentDownloaded == 0 && Main.procentUploaded == 100) ? 'indeterminate':'buffer'}}" value="{{Main.procentDownloaded}}" md-buffer-value="{{Main.procentUploaded}}"></md-progress-linear>
 			</div>
 
-			<div ng-if="Main.procentDone === 100">
+			<div ng-if="Main.procentDone && Main.totalDone === Main.fonts.length">
 				<md-button ng-click="Main.reset()">Convert more</md-button>
 				<md-button class="md-primary" ng-click="Main.save()">Save your font{{Main.fonts.length > 1 ? 's' : ''}}</md-button><br>
 				<p class="ta-c">
