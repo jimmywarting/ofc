@@ -23,7 +23,7 @@ window.app = angular.module( "wis", [ "ngMaterial", "aFilePicker" ] )
 	$http.get("https://ofc.p.mashape.com/status", {
 		timeout: timer,
 		headers: {
-			"X-Mashape-Key": "YT9CrbRFurmsh1wK0vMxAT3OAaipp1Ghp3MjsnPIAPRuXDeIae"
+			"x-mashape-key": "YT9CrbRFurmsh1wK0vMxAT3OAaipp1Ghp3MjsnPIAPRuXDeIae"
 		}
 	}).then(function(res){
 		Status.res = res;
