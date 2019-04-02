@@ -1,0 +1,4 @@
+This is a Brave Rewards publisher verification file.
+
+Domain: onlinefontconverter.com
+Token: 99d7210775cf64410bf47c3ed6b15119431fe42f19cea2581e468b9313aec11f
