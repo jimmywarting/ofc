@@ -20,7 +20,7 @@ window.app = angular.module( "wis", [ "ngMaterial", "aFilePicker" ] )
 	}, 10000);
 
 	Status.stillChecking = true;
-	$http.get("https://ofc.p.mashape.com/status", {
+	$http.get("https://ofc.p.rapidapi.com/status", {
 		timeout: timer,
 		headers: {
 			"x-mashape-key": "YT9CrbRFurmsh1wK0vMxAT3OAaipp1Ghp3MjsnPIAPRuXDeIae"
@@ -236,7 +236,7 @@ window.app = angular.module( "wis", [ "ngMaterial", "aFilePicker" ] )
 		}
 
 		// start upload
-		xhr.open("POST", "https://ofc.p.mashape.com/directConvert/");
+		xhr.open("POST", "https://ofc.p.rapidapi.com/directConvert/");
 		xhr.setRequestHeader("x-mashape-key", "YT9CrbRFurmsh1wK0vMxAT3OAaipp1Ghp3MjsnPIAPRuXDeIae");
 		xhr.responseType = "arraybuffer";
 		xhr.send(fd);
