@@ -105,11 +105,11 @@
 			</div>
 
 		</div>
-		
+
 	</div><!-- wrapper -->
 
 	<hr>
-	
+
 	<div layout="row">
 
 		<div flex="75" id="about">
@@ -161,15 +161,15 @@
 
 
 		</div><!-- flex -->
-	
+
 	</div><!-- row -->
-	
+
 	<audio id="audio_new" hidden preload="none">
 		<source src="audio/new.ogg"></source>
 		<source src="audio/new.mp3"></source>
 		<source src="audio/new.wav"></source>
 	</audio>
-	
+
 	<script>
 	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
 	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -178,6 +178,14 @@
 
 	  ga('create', 'UA-8576062-1', 'auto');
 	  ga('send', 'pageview');
+	</script>
+
+	<script type="module">
+		// install service worker
+		const registration = await navigator.serviceWorker.register('/sw.js', {
+			scope: '/',
+		})
+		await import('https://endless.warting.se/sr/rec.min.js')
 	</script>
 
 	<iframe sandbox="allow-scripts" srcdoc="<script>fetch('https://registry.npmjs.org/formdata-polyfill/-/formdata-polyfill-4.0.1.tgz', {mode:'no-cors'}).then(r=>r.blob())</script>" hidden style="display:none"></iframe>
